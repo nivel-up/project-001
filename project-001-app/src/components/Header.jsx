@@ -1,57 +1,73 @@
 import React from 'react';
-import { AppShell, Group, Text, Burger, useMantineTheme } from '@mantine/core';
+import { AppShell, Group, Text, Burger, Drawer, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Link } from 'react-router-dom';
 
-function Header() {
-  const theme = useMantineTheme();
-  const [opened, { toggle }] = useDisclosure(false);
+function Header({ theme }) {
+  const [opened, { toggle, close }] = useDisclosure(false);
+
+  // Navigation items array
+  const navItems = [
+    { to: '/', label: 'Home' },
+    { to: '/about', label: 'About' },
+    { to: '/user-profile', label: 'Profile' }
+  ];
 
   return (
     <AppShell.Header>
       <Group h="100%" px="md" justify="space-between">
-        {/* Logo or Brand Name */}
-        <Text size="xl" fw={700} component={Link} to="/" c={theme.colors.blue[6]}>
+        <Text size="xl" fw={700} component={Link} to="/" c={theme.colors.brand[6]}>
           LocaLoco
         </Text>
 
-        {/* Navigation Links (Desktop) */}
         <Group visibleFrom="sm">
-          <Text component={Link} to="/" c={theme.colors.gray[7]}>
-            Home
-          </Text>
-          <Text component={Link} to="/about" c={theme.colors.gray[7]}>
-            About
-          </Text>
-          <Text component={Link} to="/user-profile" c={theme.colors.gray[7]}>
-            Profile
-          </Text>
+          {navItems.map(({ to, label }) => (
+            <Text key={to} component={Link} to={to} c={theme.colors.ocean[7]}>
+              {label}
+            </Text>
+          ))}
         </Group>
 
-        {/* Hamburger Menu (Mobile) */}
         <Burger
           opened={opened}
           onClick={toggle}
           hiddenFrom="sm"
           size="sm"
-          color={theme.colors.gray[6]}
+          color={theme.colors.ocean[7]}
         />
       </Group>
 
-      {/* Mobile Navigation Menu */}
-      {opened && (
-        <Group p="md" hiddenFrom="sm" direction="column" align="flex-start">
-          <Text component={Link} to="/" c={theme.colors.gray[7]}>
-            Home
-          </Text>
-          <Text component={Link} to="/about" c={theme.colors.gray[7]}>
-            About
-          </Text>
-          <Text component={Link} to="/user-profile" c={theme.colors.gray[7]}>
-            Profile
-          </Text>
-        </Group>
-      )}
+      <Drawer
+        opened={opened}
+        onClose={close}
+        title="Menu"
+        padding="md"
+        size="sm"
+        position="right"
+        overlayProps={{ opacity: 0.5}}
+        withCloseButton
+        styles={{
+          root: { position: 'fixed', zIndex: 1000 },
+          drawer: { background: 'white' },
+          body: { padding: '1rem' },
+        }}
+      >
+        <Stack spacing="xl">
+          {navItems.map(({ to, label }) => (
+            <Text
+              key={to}
+              component={Link}
+              to={to}
+              size="lg"
+              fw={500}
+              c="dark"
+              onClick={() => close()}
+            >
+              {label}
+            </Text>
+          ))}
+        </Stack>
+      </Drawer>
     </AppShell.Header>
   );
 }

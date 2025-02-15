@@ -1,5 +1,9 @@
+import { Container, Title, Text, Space } from '@mantine/core';
+
 function HomePage() {
-    return <h1>Welcome to the Home Page!</h1>;
+    return (
+      <Container size="lg"></Container>
+    );
   }
   
   export default HomePage;
