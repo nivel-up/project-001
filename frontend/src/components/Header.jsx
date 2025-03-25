@@ -1,28 +1,39 @@
 import React from 'react';
-import { AppShell, Group, Text, Burger, Drawer, Stack } from '@mantine/core';
+import { AppShell, Group, Text, Burger, Drawer, Stack, useMantineTheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Link } from 'react-router-dom';
 
-function Header({ theme }) {
+function Header() {
+  const theme = useMantineTheme();
   const [opened, { toggle, close }] = useDisclosure(false);
 
   // Navigation items array
   const navItems = [
     { to: '/', label: 'Home' },
     { to: '/about', label: 'About' },
-    { to: '/user-profile', label: 'Profile' }
+    { to: '/user-profile', label: 'Profile' },
+    { to: '/user-profile', label: 'Landlord Portal' }
   ];
 
   return (
-    <AppShell.Header>
+    <AppShell.Header 
+    style={{
+      backgroundColor: theme.colors.ocean[1],
+    }}>
       <Group h="100%" px="md" justify="space-between">
-        <Text size="xl" fw={700} component={Link} to="/" c={theme.colors.brand[6]}>
+        <Text size="xl" fw={700} component={Link} to="/" c={theme.colors.black[1]}>
           LocaLoco
         </Text>
 
         <Group visibleFrom="sm">
           {navItems.map(({ to, label }) => (
-            <Text key={to} component={Link} to={to} c={theme.colors.ocean[7]}>
+            <Text key={to} component={Link} to={to} 
+              sx={{
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                color: '#eee',
+              },
+            }}>
               {label}
             </Text>
           ))}
