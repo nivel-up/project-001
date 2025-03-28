@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
 import { Container, TextInput, Button, NumberInput, Group, Slider } from '@mantine/core';
 import classes from './Search.module.css';
+import { useSearchParams } from 'react-router-dom';
 
 function Search() {
-  const [radius, setRadius] = useState(10); // Default radius in KM
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [location, setLocation] = useState(searchParams.get('location') || '');
+  const [radius, setRadius] = useState(searchParams.get('radius') || 10);
+  const [minSurface, setMinSurface] = useState(searchParams.get('minSurface') || undefined);
+  const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || undefined);
+  
+  const handleSearchClick = () => {
+    const params = {};
+
+    if (location) params.location = location;
+    if (radius) params.radius = radius;
+    if (minSurface) params.minSurface = minSurface;
+    if (maxPrice) params.maxPrice = maxPrice;
+    
+    setSearchParams(params);
+  };
 
   return (
     <Container fluid className={classes.root}>
       <Group grow>
-        <TextInput placeholder="Location" />
+        <TextInput 
+        placeholder="Location"
+        value={location}
+        onChange={(event) => setLocation(event.currentTarget.value)}
+        />
         <div style={{ width: 200 }}>
           <Slider
             value={radius}
@@ -19,9 +40,17 @@ function Search() {
             label={(value) => `${value} km`}
           />
         </div>
-        <NumberInput placeholder="Min Sq Meters" />
-        <NumberInput placeholder="Max Budget (€)" />
-        <Button>Search</Button>
+        <NumberInput 
+        placeholder="Min Sq Meters" 
+        value={minSurface}
+        onChange={(value) => setMinSurface(value)}  
+        />
+        <NumberInput 
+        placeholder="Max Budget (€)" 
+        value={maxPrice}
+        onChange={(value) => setMaxPrice(value)}
+        />
+        <Button onClick={handleSearchClick}>Search</Button>
       </Group>
     </Container>
   );

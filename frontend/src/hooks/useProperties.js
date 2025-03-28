@@ -2,15 +2,16 @@
 import { useState, useEffect } from 'react';
 import { fetchProperties } from '../services/propertyService';
 
-const useProperties = () => {
+const useProperties = ({searchParams}) => {
   const [properties, setProperties] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadProperties = async () => {
+        setIsLoading(true);
       try {
-        const data = await fetchProperties();
+        const data = await fetchProperties({searchParams});
         setProperties(data);
       } catch (err) {
         setError(err.message);
@@ -20,7 +21,7 @@ const useProperties = () => {
     };
 
     loadProperties();
-  }, []);
+  }, [searchParams]);
 
   return { properties, error, isLoading };
 };
